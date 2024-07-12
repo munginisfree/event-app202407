@@ -23,12 +23,20 @@ const SignUpForm = () => {
         }, 1500);
     };
 
+    const verifySuccessHandler = () => {
+        setSuccess(true);
+        setTimeout(() => {
+            setStep(3);
+            setSuccess(false);
+        }, 1500);
+    }
+
     return (
         <div className={styles.signupForm}>
             <div className={styles.formStepActive}>
                 {step === 1 && <EmailInput onSuccess = {emailSuccessHandler}/>}
-                {step === 2 && <VerificationInput email={eneteredEmail}/>}
-                {step === 3 && <PasswordInput/>}
+                {step === 2 && <VerificationInput email={eneteredEmail} onVerifySuccess = {verifySuccessHandler}/>}
+                {step === 3 && <PasswordInput email={eneteredEmail}/>}
                 {success && <ProgressBar/>}
             </div>
         </div>

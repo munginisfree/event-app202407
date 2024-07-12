@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styles from './SignUpForm.module.scss';
+import {AUTH_URL} from "../../config/host-config";
 
 const PasswordInput = ({email}) => {
 
@@ -34,7 +35,17 @@ const PasswordInput = ({email}) => {
             setErrorMessage('유효하지 않은 형식의 비밀번호입니다. 다시 입력해주세요.');
             return;
         }
-
+        const payload = {
+            email: email,
+            password: password
+        }
+        const response = await fetch(`${AUTH_URL}/join`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(payload)
+        });
     };
 
     useEffect(() => {
