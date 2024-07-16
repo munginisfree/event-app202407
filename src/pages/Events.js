@@ -2,11 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import EventList from '../components/EventList';
 import EventSkeleton from '../components/EventSkeleton';
 import { EVENT_URL } from '../config/host-config';
+import { useRouteLoaderData } from 'react-router-dom';
 
 // npm install loadsh
 // import { debounce, throttle } from 'lodash';
 
 const Events = () => {
+
+  const { token } = useRouteLoaderData('user-data');
 
   // loader가 리턴한 데이터 받아오기
   // const eventList = useLoaderData();
@@ -22,7 +25,7 @@ const Events = () => {
   // 로딩 상태 체크
   const [loading, setLoading] = useState(false);
 
-  // 현재 페이지 번호 
+  // 현재 페이지 번호
   const [currentPage, setCurrentPage] = useState(1);
 
   // 더이상 가져올 데이터가 있는지 확인
@@ -43,7 +46,9 @@ const Events = () => {
     console.log('start loading...');
     setLoading(true);
 
-    const response = await fetch(`${EVENT_URL}/page/${currentPage}?sort=date`);
+    const response = await fetch(`${EVENT_URL}/page/${currentPage}?sort=date`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
     const { events: loadedEvents, totalCount } = await response.json();
 
     console.log('loaded: ', { loadedEvents, totalCount, len: loadedEvents.length });
@@ -113,7 +118,7 @@ const Events = () => {
 
     }, {
       // 관찰하고 있는 요소의 높이가 50% 보일때 콜백을 실행
-      threshold: 0.5 
+      threshold: 0.5
     });
 
     // observer 관찰 대상(DOM)을 지정
@@ -132,15 +137,15 @@ const Events = () => {
 
 
   return (
-    <>
-      <EventList eventList={events} />
-      <div 
-        ref={skeletonBoxRef} 
-        // style={{ height: '300px', background: 'yellow' }}
-      >
-        {loading && <EventSkeleton count={skeletonCount} />}
-      </div>
-    </>
+      <>
+        <EventList eventList={events} />
+        <div
+            ref={skeletonBoxRef}
+            // style={{ height: '300px', background: 'yellow' }}
+        >
+          {loading && <EventSkeleton count={skeletonCount} />}
+        </div>
+      </>
   );
 };
 
@@ -150,7 +155,7 @@ export default Events;
 // export const loader = async () => {
 
 //   const response = await fetch('http://localhost:8282/events/page/1?sort=date');
-  
+
 //   if (!response.ok) {
 //     const errorText = await response.text();
 //     throw json(
