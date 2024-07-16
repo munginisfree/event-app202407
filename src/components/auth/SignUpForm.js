@@ -64,8 +64,13 @@ const SignUpForm = () => {
 
         const result = await response.text();
 
-        if(result){
+        if(result === "saved"){
             alert('회원가입에 성공하셨습니다');
+            navigate('/');
+        }
+
+        if(result === "failed to save"){
+            alert('회원가입에 실패하셨습니다');
             navigate('/');
         }
 
